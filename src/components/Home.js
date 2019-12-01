@@ -10,11 +10,11 @@ import {Link} from 'react-router-dom';
 
 const Home = ()=>{
 
-    const [trending,setTrending] = useState([]);
+    const [trending,setTrending] = useState();
 
     const [trendingPage, setTrendingPage] = useState(1);
     
-    const [upComing,setUpcoming] = useState([]);
+    const [upComing,setUpcoming] = useState();
 
     const [upComingPage, setUpcomingPage] = useState(1);
 
@@ -40,8 +40,8 @@ const Home = ()=>{
                     const score = Math.floor(idx.vote_average/2);
                     const id = uuid();
                     return(
-
-                       <Link to={`/movie/${idx.id}`}>
+                    
+                       <Link to={`/movie/${idx.id}`} className='text-dark'>
                             <div className="card  hvr-float  p-0" key={id}>                 
                                 <img className="card-img-top" src={`${movieThumnailDoamin}${idx.poster_path}`} alt={idx.title}/>                     
                                     <div className="card-body">                               
@@ -69,7 +69,7 @@ const Home = ()=>{
                     const id = uuid();
                     return(
 
-                       
+                        <Link to={`/movie/${idx.id}`} className='text-dark'>
                             <div className="card  hvr-float  p-0" key={id}>                 
                                 <img className="card-img-top" src={`${movieThumnailDoamin}${idx.poster_path}`} alt={idx.title}/>                     
                                     <div className="card-body">                               
@@ -79,7 +79,7 @@ const Home = ()=>{
                                             <p className="card-text mt-1"><small className="text-muted">Release Date {moment(idx.release_date).format('LL')}</small></p>
                                     </div>                                                
                             </div>
-    
+                        </Link>
                         )
                 }
                 )}                    
@@ -155,6 +155,9 @@ const Home = ()=>{
     return(
         <div>
             <Navbar/>
+            
+            {trending && upComing &&
+            
             <div className='container mt-5'>
                 <div className='d-flex'>
                     <h3 className='mr-auto title'>Now Trending</h3>
@@ -169,6 +172,8 @@ const Home = ()=>{
                 {renderUpcoming()}
 
             </div>
+            }
+            
             <Footer/>
         </div>
 
