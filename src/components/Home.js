@@ -7,11 +7,11 @@ import heart from '../media/love.png';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import {Link} from 'react-router-dom';
-import { CardBody, Card,UncontrolledCollapse,UncontrolledTooltip } from 'reactstrap';
+import { CardBody, Card,UncontrolledCollapse,UncontrolledTooltip,Spinner } from 'reactstrap';
 
 const Home = ()=>{
 
-    const [trending,setTrending] = useState();
+    const [trending,setTrending] = useState([]);
 
     const [trendingPage, setTrendingPage] = useState(1);
     
@@ -19,11 +19,10 @@ const Home = ()=>{
 
     const [upComingPage, setUpcomingPage] = useState(1);
 
-    const [isUpComingOpen,setUpComingOpen] = useState();
+    const [trendingLoading,setTrendingLoading] = useState(false);
 
-    const toggleUpComing = (id) =>{
-        setUpComingOpen({...isUpComingOpen,[id]: true? false: true})
-    }
+    const [upComingLoading,setUpComingLoading] = useState(false);
+
 
 
 
@@ -36,13 +35,31 @@ const Home = ()=>{
             const upcomingResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/upcoming?page=${upComingPage}&limit=6`);
             setUpcoming(upcomingResponse.data.results);
             
-           
+           setTrendingLoading(true);
+           setUpComingLoading(true);
         }
         fetchData();
-        upComing && upComing.map(idx=>setUpComingOpen({[idx.id]:false}));
 
     },[trendingPage,upComingPage])
     //console.log(upComing)
+
+    const renderLoading = ()=>{
+        const arr = ['','','','','','']; // for array of 6 items
+        return (
+            <div className='row mt-4'>
+                {arr.map(()=> { 
+                    return(
+                    <div className='col-4 text-center align-self-center' style={{height:'400px'}}>
+                       
+                            <Spinner  className='align-middle text-center 'style={{ width: '5rem', height: '5rem',marginTop:'50%' }} />
+                        
+                    </div>
+                )
+                } ) }
+            </div>
+        )
+    }
+
 
     const renderTrending = () =>{
         const movieThumnailDoamin = 'https://image.tmdb.org/t/p/w500';
@@ -150,7 +167,8 @@ const Home = ()=>{
           let page = trendingPage;
           page--;
           setTrendingPage(page);
-      }
+          setTrendingLoading(false);
+        }
       
     }
 
@@ -158,7 +176,8 @@ const Home = ()=>{
         let page = trendingPage;
         page++;
         setTrendingPage(page);
-        
+        setTrendingLoading(false);
+
       }
 
 
@@ -185,13 +204,15 @@ const Home = ()=>{
           let page = upComingPage;
           page--;
           setUpcomingPage(page);
+          setUpComingLoading(false);
       }
     }
 
     const handleUpComingPaginationNextClick = () =>{
         let page = upComingPage;
         page++;
-        setUpcomingPage(page);        
+        setUpcomingPage(page);       
+        setUpComingLoading(false); 
       }
 
     
@@ -200,23 +221,25 @@ const Home = ()=>{
         <div className=''>
             <Navbar/>
             
-            {trending && upComing &&
+            
             
                 <div className='container mt-5'>
                         <div className='d-flex'>
                             <h3 className='mr-auto title'>Now Trending</h3>
-                            {renderTrendingPagination()}
+                            {trending && renderTrendingPagination()}
                         </div>
-                            {renderTrending()}
+                            {trendingLoading? renderTrending() : renderLoading() }
 
                         <div className='d-flex'>
                             <h3 className='mr-auto title'>Upcoming</h3>
-                            {renderUpcomingPagination()}
+                            {upComing && renderUpcomingPagination()}
                          </div>
-                        {renderUpcoming()}
+                        {upComingLoading? renderUpcoming() : renderLoading()}
 
                 </div>
-            }
+               
+
+            
         </div>
 
     );
