@@ -63,7 +63,7 @@ const Home = ()=>{
                                                 <UncontrolledTooltip placement="right" target={`UncontrolledTooltipExample${idx.id}`}>
                                                     Open new page
                                                 </UncontrolledTooltip>
-                                            <p className="card-text">{shortOverview}...  <a><button className='as-text' id={`toggler${idx.id}`}>Readmore</button></a></p>   
+                                            <p className="card-text">{shortOverview}...  <a><button className='as-text' id={`toggler${idx.id}`}><strong>Readmore</strong></button></a></p>   
                                             
                                             <UncontrolledCollapse toggler={`#toggler${idx.id}`}>
                                                 <Card>
@@ -105,7 +105,7 @@ const Home = ()=>{
                                                     Open new page
                                                 </UncontrolledTooltip>
 
-                                            <p className="card-text">{shortOverview}...  <a><button className='as-text' id={`toggler${idx.id}`}>Readmore</button></a></p>   
+                                            <p className="card-text">{shortOverview}...  <a><button className='as-text' id={`toggler${idx.id}`}><strong>Readmore</strong></button></a></p>   
                                             
                                                 <UncontrolledCollapse toggler={`#toggler${idx.id}`}>
                                                     <Card>
