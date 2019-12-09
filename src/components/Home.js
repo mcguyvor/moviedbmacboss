@@ -14,16 +14,18 @@ const Home = ()=>{
     const [nowPlaying,setnowPlaying] = useState([]);
 
     const [nowPlayingPage, setnowPlayingPage] = useState(1);
+
+    const [nowPlayingMaxPage, setnowPlayingMaxPage] = useState(0);
     
     const [upComing,setUpcoming] = useState([]);
 
     const [upComingPage, setUpcomingPage] = useState(1);
 
+    const [upComingMaxPage, setupComingMaxPage] = useState(0);
+
     const [nowPlayingLoading,setnowPlayingLoading] = useState(false);
 
     const [upComingLoading,setUpComingLoading] = useState(false);
-
-
 
 
     useEffect(()=>{
@@ -31,9 +33,11 @@ const Home = ()=>{
 
             const trendResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/nowPlaying?page=${nowPlayingPage}&limit=6`);
             setnowPlaying(trendResponse.data.results);
+            setnowPlayingMaxPage(trendResponse.data.total_pages + 1)
 
             const upcomingResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/upcoming?page=${upComingPage}&limit=6`);
             setUpcoming(upcomingResponse.data.results);
+            setupComingMaxPage(upcomingResponse.data.total_pages + 1)
             
            setnowPlayingLoading(true);
            setUpComingLoading(true);
@@ -144,14 +148,15 @@ const Home = ()=>{
         )                    
     }
 
-    const rendernowPlayingPagination = () =>{
+    const rendernowPlayingPagination = () => {
         const disablePrevious = nowPlayingPage === 1 ? 'page-item disabled' : 'page-item'
+        const disableNext = nowPlayingPage === nowPlayingMaxPage ? 'page-item disabled' : 'page-item'
         return (
                     <nav className='mr-2'>
                         <ul className='pagination'>
                             <li className={disablePrevious}><a className='page-link' onClick={handleTrendPaginationPreviousClick}> {`<`} </a></li>
                             <li className='page-item'><a className='page-link'> {nowPlayingPage}  </a></li>
-                            <li className='page-item'><a className='page-link' onClick={handleTrendPaginationNextClick}> > </a></li>
+                            <li className={disableNext}><a className='page-link' onClick={handleTrendPaginationNextClick}> > </a></li>
                         </ul>
                     </nav>
         )
@@ -184,12 +189,13 @@ const Home = ()=>{
     // For upcoming section
       const renderUpcomingPagination = () =>{
         const disablePrevious = upComingPage === 1 ? 'page-item disabled' : 'page-item'
+        const disableNext = upComingPage === upComingMaxPage ? 'page-item disabled' : 'page-item'
         return (
                     <nav className='mr-2'>
                         <ul className='pagination'>
                             <li className={disablePrevious}><a className='page-link' onClick={handleUpcomingPaginationPreviousClick}> {`<`} </a></li>
                             <li className='page-item'><a className='page-link'> {upComingPage}  </a></li>
-                            <li className='page-item'><a className='page-link' onClick={handleUpComingPaginationNextClick}> > </a></li>
+                            <li className={disableNext}><a className='page-link' onClick={handleUpComingPaginationNextClick}> > </a></li>
                         </ul>
                     </nav>
         )
