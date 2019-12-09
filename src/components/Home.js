@@ -11,15 +11,15 @@ import { CardBody, Card,UncontrolledCollapse,UncontrolledTooltip,Spinner } from 
 
 const Home = ()=>{
 
-    const [trending,setTrending] = useState([]);
+    const [nowPlaying,setnowPlaying] = useState([]);
 
-    const [trendingPage, setTrendingPage] = useState(1);
+    const [nowPlayingPage, setnowPlayingPage] = useState(1);
     
     const [upComing,setUpcoming] = useState([]);
 
     const [upComingPage, setUpcomingPage] = useState(1);
 
-    const [trendingLoading,setTrendingLoading] = useState(false);
+    const [nowPlayingLoading,setnowPlayingLoading] = useState(false);
 
     const [upComingLoading,setUpComingLoading] = useState(false);
 
@@ -29,18 +29,18 @@ const Home = ()=>{
     useEffect(()=>{
         const fetchData =async ()=>{
 
-            const trendResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/trending?page=${trendingPage}&limit=6`);
-            setTrending(trendResponse.data.results);
+            const trendResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/nowPlaying?page=${nowPlayingPage}&limit=6`);
+            setnowPlaying(trendResponse.data.results);
 
             const upcomingResponse = await axios.get(`https://movie-mb-api.herokuapp.com/home/upcoming?page=${upComingPage}&limit=6`);
             setUpcoming(upcomingResponse.data.results);
             
-           setTrendingLoading(true);
+           setnowPlayingLoading(true);
            setUpComingLoading(true);
         }
         fetchData();
 
-    },[trendingPage,upComingPage])
+    },[nowPlayingPage,upComingPage])
     //console.log(upComing)
 
     const renderLoading = ()=>{
@@ -61,11 +61,11 @@ const Home = ()=>{
     }
 
 
-    const renderTrending = () =>{
+    const rendernowPlaying = () =>{
         const movieThumnailDoamin = 'https://image.tmdb.org/t/p/w500';
         return(
             <div className='card-columns mt-4 '>
-                {trending.map((idx)=>{
+                {nowPlaying.map((idx)=>{
                     const score = Math.floor(idx.vote_average/2);
                     const id = uuid();
                     const shortOverview = idx.overview.split('').slice(0,100).join('');
@@ -144,13 +144,13 @@ const Home = ()=>{
         )                    
     }
 
-    const renderTrendingPagination = () =>{
-        const disablePrevious = trendingPage === 1 ? 'page-item disabled' : 'page-item'
+    const rendernowPlayingPagination = () =>{
+        const disablePrevious = nowPlayingPage === 1 ? 'page-item disabled' : 'page-item'
         return (
                     <nav className='mr-2'>
                         <ul className='pagination'>
                             <li className={disablePrevious}><a className='page-link' onClick={handleTrendPaginationPreviousClick}> {`<`} </a></li>
-                            <li className='page-item'><a className='page-link'> {trendingPage}  </a></li>
+                            <li className='page-item'><a className='page-link'> {nowPlayingPage}  </a></li>
                             <li className='page-item'><a className='page-link' onClick={handleTrendPaginationNextClick}> > </a></li>
                         </ul>
                     </nav>
@@ -161,22 +161,22 @@ const Home = ()=>{
         
         //check for page number not equal to one to prevent page = 0
 
-      if(trendingPage === 1){
+      if(nowPlayingPage === 1){
          return ; 
-      }else if( trendingPage >1 ){
-          let page = trendingPage;
+      }else if( nowPlayingPage >1 ){
+          let page = nowPlayingPage;
           page--;
-          setTrendingPage(page);
-          setTrendingLoading(false);
+          setnowPlayingPage(page);
+          setnowPlayingLoading(false);
         }
       
     }
 
     const handleTrendPaginationNextClick = () =>{
-        let page = trendingPage;
+        let page = nowPlayingPage;
         page++;
-        setTrendingPage(page);
-        setTrendingLoading(false);
+        setnowPlayingPage(page);
+        setnowPlayingLoading(false);
 
       }
 
@@ -225,10 +225,10 @@ const Home = ()=>{
             
                 <div className='container mt-5'>
                         <div className='d-flex'>
-                            <h3 className='mr-auto title'>Now Trending</h3>
-                            {trending && renderTrendingPagination()}
+                            <h3 className='mr-auto title'>Now Playing</h3>
+                            {nowPlaying && rendernowPlayingPagination()}
                         </div>
-                            {trendingLoading? renderTrending() : renderLoading() }
+                            {nowPlayingLoading? rendernowPlaying() : renderLoading() }
 
                         <div className='d-flex'>
                             <h3 className='mr-auto title'>Upcoming</h3>
